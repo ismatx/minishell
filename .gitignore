@@ -1,0 +1,12 @@
+# Binaire et objets compilés
+minishell
+*.o
+# Sorties des tests de redirection
+*.output
+*.error
+out.txt
+output.txt
+# macOS / éditeur
+._*
+.DS_Store
+.vscode/
