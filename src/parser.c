@@ -1,16 +1,3 @@
-/*
-  Projet minishell - Licence 3 Info - PSI 2024
- 
-  Nom :
-  Prénom :
-  Num. étudiant :
-  Groupe de projet :
-  Date :
- 
-  Parsing de la ligne de commandes utilisateur (implémentation).
- 
- */
-
 #include <stddef.h>  // pour size_t
 #include <ctype.h>   // pour isspace
 #include <string.h>  // pour strlen, strncpy
@@ -55,18 +42,46 @@ int clean(char* str) {
 
 // Fonction pour séparer une chaîne sur un séparateur spécifique
 int separate_s(char* str, char* s, size_t max) {
-    if (str == NULL || s == NULL) return -1;
-
-    char* token;
-    size_t count = 0;
-
-    token = strtok(str, s);
-    while (token != NULL && count < max) {
-        token = strtok(NULL, s);
-        count++;
+   if (str == NULL || s == NULL) return -1;
+    size_t len = strlen(str);
+    size_t count = 0; // Compteur de caractères ajoutés
+    char* result = (char*)malloc((max + 1) * sizeof(char)); // +1 pour le '\0'
+    if (result == NULL) return -1; // Vérification de l'allocation
+    char* ptr = result; // Pointeur pour construire la chaîne résultante
+    // Parcourir chaque caractère de la chaîne d'entrée
+    for (size_t i = 0; i < len && count < max; i++) {
+        // Vérifier si le caractère courant est dans la chaîne s
+        if (strchr(s, str[i]) != NULL) {
+            // Ajouter un espace avant si ce n'est pas le début et le précédent n'est pas un espace
+            if (ptr != result && *(ptr - 1) != ' ') {
+                *ptr++ = ' ';
+                count++;
+                if (count >= max) break; // Vérifier la capacité
+            }
+            // Ajouter le caractère spécial
+            *ptr++ = str[i];
+            count++;
+            if (count >= max) break; // Vérifier la capacité
+            // Ajouter un espace après si ce n'est pas la fin et le suivant n'est pas un espace
+            if (i + 1 < len && str[i + 1] != ' ' && count < max) {
+                *ptr++ = ' ';
+                count++;
+            }
+        } else {
+            // Ajouter le caractère courant
+            *ptr++ = str[i];
+            count++;
+        }
+        // Vérifier la capacité
+        if (count >= max) break; 
     }
-
-    return count;
+    // Terminer la chaîne résultante
+    *ptr = '\0';
+    // Copier le résultat dans la chaîne d'entrée
+    strncpy(str, result, max); // S'assurer de ne pas dépasser max
+    str[max] = '\0'; // S'assurer que str est bien terminée
+    free(result); // Libérer la mémoire allouée
+    return 0; // Opération réussie
 }
 
 // Fonction pour substituer les variables d'environnement dans une chaîne
