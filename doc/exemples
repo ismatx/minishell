@@ -1,0 +1,44 @@
+ATTENTION, DES FOIS LA COMPILATION NE MARCHES PAS COMME PREVU IL FAUDRA DONC RECOMPILER LE CODE ( CAS OU CERTAINES COMMANDES NE MARCHENT PAS) 
+DES FOIS IL Y'A DES BUGS DE SEGMENTATION FAULT AVEC L'EXPORT DE LA VARIABLE, il suffit de recompiler le programme et refaire la commande directement, sa marcheras;
+ces cas la sonts particuliers, et ont eu lieu seulement sur l'ordinateur d'une autre personne qui ne fais pas partie du binome (phase de tests sur plusieurs machines) 
+le code a été réalisé par quasi-intégralement par : madani youcef ismat ; saidi souad; 
+L'AIDE DE PLUSIEURS ressources a été solicitée (stackOverflow, ChatGPT, GitHub) 
+commande pour compiler correctement le code: gcc -o minishell main.c parser.c cmd.c builtin.c -Wall
+listes des commandes fonctionnelles: les commandes builtin sonts biensur toutes fonctionnelles:
+code .
+ls
+cd testin
+ls -u 
+cd ..
+mkdir test
+rmdir test
+nano new
+cat file.output
+sleep 5 
+sleep 5 &
+ls -u > file.output
+ls -u >> file.output
+faeiu 2> file.error
+fhzeuia 2>> file.error
+echo hello ; echo world ; echo i ; echo am ; echo him 
+ls -u | grep .c | wc -l 
+export var VALEUR
+echo $var
+printvar var // pour bien verifier la value de la variable et aussi etre sur de l'avoir supprimée
+unset var
+false && echo SUCCESS
+true && echo SUCCESS
+true || echo SUCCESS
+false || echo SUCCESS
+uid 
+history
+cat < file.output
+echo hello >&2
+fbzeyfuz 2>&1
+echo hi &> output.txt
+clear
+exit
+
+
+
+merci pour votre temps monsieur :) 

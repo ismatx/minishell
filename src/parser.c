@@ -1,9 +1,22 @@
+/*
+Fichier parser.c : Gestion et exécution des commandes pour le shell
+Auteur : MADANI YOUCEF ISMAT ELLAH , SAIDI SOUAD
+Dépendances : cmd.h, builtin.h, parser.h
+L3 INFORMATIQUE 
+m22412177
+*/
+
 #include <stddef.h>  // pour size_t
 #include <ctype.h>   // pour isspace
 #include <string.h>  // pour strlen, strncpy
 #include <stdlib.h>
 
-// Fonction pour supprimer les espaces en début et fin de chaîne
+/*
+Fonction trim
+Paramètre str : chaîne de caractères à traiter
+Retourne un entier, 0 si l'opération réussit, -1 sinon
+Supprime les espaces en début et fin de chaîne
+*/
 int trim(char* str) {
     if (str == NULL) return -1;
 
@@ -26,7 +39,12 @@ int trim(char* str) {
     return 0;
 }
 
-// Fonction pour nettoyer une chaîne (à définir selon ton besoin exact)
+/*
+Fonction clean
+Paramètre str : chaîne de caractères à nettoyer
+Retourne un entier, 0 si l'opération réussit, -1 sinon
+Remplace les caractères non imprimables par des espaces
+*/
 int clean(char* str) {
     if (str == NULL) return -1;
 
@@ -40,7 +58,15 @@ int clean(char* str) {
     return 0;
 }
 
-// Fonction pour séparer une chaîne sur un séparateur spécifique
+/*
+Fonction separate_s
+Paramètres :
+    str : chaîne de caractères à traiter
+    s : chaîne contenant les séparateurs
+    max : taille maximale de la chaîne traitée
+Retourne un entier, 0 si l'opération réussit, -1 sinon
+Ajoute des espaces avant et après chaque séparateur
+*/
 int separate_s(char* str, char* s, size_t max) {
    if (str == NULL || s == NULL) return -1;
     size_t len = strlen(str);
@@ -53,6 +79,18 @@ int separate_s(char* str, char* s, size_t max) {
         // Vérifier si le caractère courant est dans la chaîne s
         if (strchr(s, str[i]) != NULL) {
             // Ajouter un espace avant si ce n'est pas le début et le précédent n'est pas un espace
+            // Special case: Handle the case for multi-character operators like '&&' or '||'
+            if (i + 1 < len && str[i] == '&' && ((str[i + 1] == '&')|| (str[i + 1] == '>'))) {
+                *ptr++ = str[i++];
+                *ptr++ = str[i];
+                count += 2;
+                continue;
+            } else if (i + 1 < len && str[i] == '|' && str[i + 1] == '|') {
+                *ptr++ = str[i++];
+                *ptr++ = str[i];
+                count += 2;
+                continue;
+            }
             if (ptr != result && *(ptr - 1) != ' ') {
                 *ptr++ = ' ';
                 count++;
@@ -84,12 +122,19 @@ int separate_s(char* str, char* s, size_t max) {
     return 0; // Opération réussie
 }
 
-// Fonction pour substituer les variables d'environnement dans une chaîne
+/*
+Fonction substenv
+Paramètres :
+    str : chaîne de caractères contenant des variables d'environnement à substituer
+    max : taille maximale de la chaîne
+Retourne un entier, 0 si l'opération réussit, -1 sinon
+Substitue les variables d'environnement dans une chaîne
+*/
 int substenv(char* str, size_t max) {
     if (str == NULL) return -1;
 
     // Remplacer une variable d'environnement basique comme $HOME
-    for (size_t i = 0; i < strlen(str); i++) {
+    for (size_t i = 0; i < strlen(str); i++) { // home = $Home
         if (str[i] == '$') {
             char* env_var = getenv(&str[i + 1]);
             if (env_var != NULL) {
@@ -101,7 +146,15 @@ int substenv(char* str, size_t max) {
     return 0;
 }
 
-// Fonction pour découper une chaîne en tokens
+/*
+Fonction strcut
+Paramètres :
+    str : chaîne de caractères à découper
+    sep : caractère séparateur
+    tokens : tableau pour stocker les tokens
+    max : nombre maximum de tokens
+Retourne un entier, nombre de tokens extraits, -1 en cas d'erreur
+*/
 int strcut(char* str, char sep, char** tokens, size_t max) {
     if (str == NULL || tokens == NULL) return -1;
 
@@ -118,7 +171,4 @@ int strcut(char* str, char sep, char** tokens, size_t max) {
     return count;
 }
 
-// Fonction optionnelle pour découper une chaîne en tokens (version sécurisée)
-int strcut_s(char* str, char sep, char** tokens, size_t max) {
-    return strcut(str, sep, tokens, max);  // Utilisation de la même logique
-}
+
