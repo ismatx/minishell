@@ -10,3 +10,6 @@ output.txt
 ._*
 .DS_Store
 .vscode/
+
+# Graphe de code généré par graphify (reconstruit par ses hooks git)
+graphify-out/
